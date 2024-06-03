@@ -49,6 +49,8 @@ class ListingController extends Controller
             $data['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
+        $data['user_id'] = auth()->id();
+
         Listing::create($data);
 
         return redirect('/')->with('message', 'Listing created successfully');
@@ -69,7 +71,7 @@ class ListingController extends Controller
             'email' => 'required|email',
             'tags' => 'required',
             'description' => 'required',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -79,5 +81,21 @@ class ListingController extends Controller
         $listing->update($data);
 
         return redirect('/')->with('message', 'Listing updated successfully');
+    }
+
+
+    public function destroy(Listing $listing)
+    {
+        if (!$listing->id) {
+            Response("No Id Provided!");
+        }
+
+        $listing->delete($listing->id);
+        return redirect('/')->with('message', 'Listing deleted successfully');
+    }
+
+    public function manage()
+    {
+        return view('listing.manage', ['listings' => auth()->user()->listings()->get()]);
     }
 }
