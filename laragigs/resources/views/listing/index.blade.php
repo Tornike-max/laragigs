@@ -14,8 +14,11 @@
      <p>No Data Founded!</p>
 @endif
 
+
 </div>
 
-
+<div class="p-4 mt-4">
+    {{$listings->links()}}
+</div>
 </x-layout>
 
